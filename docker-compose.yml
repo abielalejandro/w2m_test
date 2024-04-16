@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: w2m-api
+    ports:
+      - "8080:8080"    
+    networks:
+      - w2m
+networks:
+  w2m:
+    driver: bridge
