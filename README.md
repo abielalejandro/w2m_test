@@ -58,3 +58,4 @@ Los script se colocan en la carpeta **resources/migracion/db/**
 * Tests
 * Test de integracion
 * Versionamiento de la base de datos (Flyway)
+* Cache de peticiones
