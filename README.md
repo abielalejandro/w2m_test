@@ -43,7 +43,7 @@ http://localhost:8080/swagger-ui.html
 * Un rol de permisos de lectura ROLE_USER
 * Usuarios en memoria
   * username: **user** password: **user** role: **ROLE_USER**
-  * username: **admin** password: **admin* role: **ROLE_ADMIN**
+  * username: **admin** password: **admin** role: **ROLE_ADMIN**
 
 ## Versionamiento de la bd (Flyway)
 El versionamiento se ejecuta de manera automatica al arrancar la aplicacion.
