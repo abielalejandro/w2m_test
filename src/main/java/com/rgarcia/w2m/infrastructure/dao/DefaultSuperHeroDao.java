@@ -7,11 +7,8 @@ import com.rgarcia.w2m.infrastructure.dao.repository.SuperHeroRepository;
 import com.rgarcia.w2m.infrastructure.mapper.SuperHeroMapper;
 import com.rgarcia.w2m.infrastructure.model.SuperHeroEntity;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +43,7 @@ public class DefaultSuperHeroDao implements SuperHeroDao {
 
     @Override
     public List<SuperHero> search(SearchSuperHeroParameters parameters) {
-        if (null==parameters.getQuery()) {
+        if (!Optional.of(parameters.getQuery()).isPresent()) {
             parameters.setQuery("");
         }
 
@@ -65,7 +62,7 @@ public class DefaultSuperHeroDao implements SuperHeroDao {
 
     @Override
     public Long count(String query) {
-        if (null==query) {
+        if (!Optional.of(query).isPresent()) {
             query = "";
         }
         query = "%"+query+"%";
@@ -74,7 +71,7 @@ public class DefaultSuperHeroDao implements SuperHeroDao {
 
     @Override
     public List<SuperHero> searchAll(String query) {
-        if (null==query) {
+        if (!Optional.of(query).isPresent()) {
             query = "";
         }
         query = "%"+query+"%";

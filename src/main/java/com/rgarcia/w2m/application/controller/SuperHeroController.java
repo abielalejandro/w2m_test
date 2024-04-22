@@ -39,10 +39,7 @@ public class SuperHeroController {
             @RequestParam(name="q") Optional<String> q
     ) {
         SearchSuperHeroParameters parameters = new SearchSuperHeroParameters();
-        if (q.isPresent()) {
-            parameters.setQuery(q.get());
-        }
-
+        parameters.setQuery(q.orElse(""));
         parameters.setPage(page);
         parameters.setLimit(size);
         return mapper.toResponse(service.search(parameters));
@@ -54,7 +51,7 @@ public class SuperHeroController {
     public GetSuperHeroesResponse searchAll(
             @RequestParam(name="q") Optional<String> q
     ) {
-        return mapper.toResponse(service.searchAll(q.get()));
+        return mapper.toResponse(service.searchAll(q.orElse("")));
     }
 
     @Timed

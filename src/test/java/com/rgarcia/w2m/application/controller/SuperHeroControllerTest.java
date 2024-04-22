@@ -16,8 +16,6 @@ import com.rgarcia.w2m.application.dto.request.CreateSuperHero;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class SuperHeroControllerTest {
@@ -88,7 +86,7 @@ class SuperHeroControllerTest {
     @Test
     void whenUpdateHero()  throws Exception {
         CreateSuperHero post = new CreateSuperHero(
-                "Flash","Barry","Velocidad"
+                "Aquaman","Aquaman","vida marina"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -104,7 +102,28 @@ class SuperHeroControllerTest {
                         )
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.name").value("Flash"));
+                .andExpect(jsonPath("$.data.name").value("Aquaman"));
+    }
+
+    @Test
+    void whenUpdateHeroDuplicatedError()  throws Exception {
+        CreateSuperHero post = new CreateSuperHero(
+                "Flash","Barry","Velocidad"
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/api/v1/superheroes/1")
+                                .header("content-type","application/json")
+                                .with(
+                                        SecurityMockMvcRequestPostProcessors
+                                                .user("admin")
+                                                .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                                ).content(
+                                        objectMapper.writeValueAsString(post)
+                                )
+                )
+                .andExpect(status().isBadRequest());
     }
 
     @Test

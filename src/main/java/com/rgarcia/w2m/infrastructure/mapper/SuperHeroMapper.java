@@ -14,14 +14,6 @@ public class SuperHeroMapper {
         return (SuperHero) convert.create(entity, SuperHero.class);
     }
 
-    /*public SuperHeroEntity toEntity(SuperHero domain) {
-        SuperHeroEntity entity = new SuperHeroEntity();
-        entity.setName(domain.getName());
-        entity.setPower(domain.getPower());
-        entity.setRealName(domain.getRealName());
-        return entity;
-    }*/
-
     public SuperHeroEntity toEntity(SuperHero domain) {
         return (SuperHeroEntity) convert.create(domain, SuperHeroEntity.class);
     }

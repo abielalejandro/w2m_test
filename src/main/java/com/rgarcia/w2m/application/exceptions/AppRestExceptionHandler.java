@@ -5,6 +5,7 @@ import com.rgarcia.w2m.exceptions.SuperHeroNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -25,6 +26,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 /**
  *
  * @author Romerd Garcia
@@ -70,7 +73,7 @@ public class AppRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
             final MethodArgumentTypeMismatchException ex, 
             final WebRequest request) {
-        final String error = ex.getName() + " should be of type " + ex.getRequiredType().getName();
+        final String error = ex.getMessage();
 
         final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
         return new ResponseEntity<Object>(toErrorResponse(apiError), new HttpHeaders(), apiError.getStatus());
@@ -102,12 +105,7 @@ public class AppRestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
             HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(ex.getMethod());
-        builder.append(" method is not supported for this request. Supported methods are ");
-        ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
-
-        final ApiError apiError = new ApiError(HttpStatus.METHOD_NOT_ALLOWED, ex.getLocalizedMessage(), builder.toString());
+        final ApiError apiError = new ApiError(HttpStatus.METHOD_NOT_ALLOWED, ex.getLocalizedMessage(), ex.getLocalizedMessage());
         return new ResponseEntity<Object>(toErrorResponse(apiError), new HttpHeaders(), apiError.getStatus());
     }
 
@@ -127,6 +125,11 @@ public class AppRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(toErrorResponse(apiError), new HttpHeaders(), apiError.getStatus());
     }
 
+    @ExceptionHandler({ DataIntegrityViolationException.class })
+    public ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex, final WebRequest request) {
+        final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Data integrity error", "Data integrity error");
+        return new ResponseEntity<Object>(toErrorResponse(apiError), new HttpHeaders(), apiError.getStatus());
+    }
 
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
